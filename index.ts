@@ -1,5 +1,5 @@
 'use strict'
-const mergeSubscribers = require('./lib/test')
+const mergeSubscribers = require('./lib/mergeSubscribers')
 const updateCsv = require('./lib/updateCsv')
 import { mergeConfig, updateOptions } from './lib/types'
 
