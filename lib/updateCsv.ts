@@ -154,11 +154,15 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
     let foundValue = ""
     console.log('constants: ', constants)
     if(constants.indexA) {
-        console.log('Running func')
-        foundValue = func(arr[constants.indexA])
+        if(arr[constants.indexA]) {
+            console.log('Running func')
+            foundValue = func(arr[constants.indexA])
+        }
     }
     if(constants.indexB) {
-        arr[constants.indexB] = foundValue
+        if(arr[constants.indexB]) {
+            arr[constants.indexB] = foundValue
+        }
     }
     return arr.reduce(createLineFromArr, '')
 }
