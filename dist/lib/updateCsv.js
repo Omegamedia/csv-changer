@@ -9,7 +9,7 @@ const writeFile = require('./file').writeFile;
  * @param delimiter csv delimiter
  */
 const getHeader = (str, delimiter = ',') => str.split(delimiter);
-const matchNameGetIndex = (value) => (index, name, i) => value === name ? i : index;
+const matchNameGetIndex = (value) => (index, name, i) => name.indexOf(value) > -1 ? i : index;
 /**
  * Create line without modifications
  * In use for consistency
@@ -61,6 +61,7 @@ const createConstants = (str, options) => {
     let delimiter = options.delimiter || ',';
     let array = str.split(delimiter);
     let constants = {};
+    console.log(options.options);
     if (options.type === "move_inside" /*&& checkOptions("move_inside", options)*/) {
         // Type move_inside = move variable from inside kolumn to new kolumn
         /* TODO: only yet supported type */

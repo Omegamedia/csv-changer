@@ -14,7 +14,7 @@ const getHeader = (str: string, delimiter = ','): string[] => str.split(delimite
 
 const matchNameGetIndex = (value: string) => 
                             (index: number, name: string, i: number): number =>
-                                value === name ? i : index
+                                name.indexOf(value) > -1 ? i : index
 /**
  * Create line without modifications
  * In use for consistency
@@ -69,6 +69,7 @@ const createConstants = (str: string, options: updateOptions): optionsConstants 
     let delimiter = options.delimiter || ','
     let array =  str.split(delimiter)
     let constants = {}
+    console.log(options.options)
     if(options.type === "move_inside" /*&& checkOptions("move_inside", options)*/) {
         // Type move_inside = move variable from inside kolumn to new kolumn
        /* TODO: only yet supported type */ 
