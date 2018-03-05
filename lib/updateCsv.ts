@@ -24,7 +24,6 @@ const matchNameGetIndex = (value: string) =>
  */
 const createSimpleLine = (str: string, delimiter = ',') => {
     let array = str.split(delimiter)
-    let length = array.length
     let newstring = array.reduce(createLineFromArr, '')
     return newstring
 }
@@ -37,7 +36,7 @@ const createSimpleLine = (str: string, delimiter = ',') => {
  * @param original original array
  */
 const createLineFromArr = (string: string, value: string, i: number, original: string[]) => {
-    if(i === length - 1) {
+    if(i === original.length - 1) {
         string += `${value}\n`
     } else {
         string += `${value};`
