@@ -82,35 +82,46 @@ const main = (options) => new Promise((resolve, reject) => {
     let newstring = '';
     let header = [];
     let constants = {};
-    let s = fs.createReadStream(options.filename)
-        .pipe(es.split())
-        .pipe(es.mapSync((line) => {
-        s.pause();
-        /* If first line */
-        if (index === 0) {
-            newstring += createSimpleLine(line, options.delimiter);
-            header = getHeader(line, options.delimiter);
-            constants = createConstants(line, options);
-        }
-        else {
-            /*  Create new lines */
-            newstring += createNewLine(line, options, constants);
-        }
-        index++;
-        s.resume();
-    }))
-        .on('error', (err) => {
+    let path = `${options.path}/${options.filename}`;
+    console.log('Finding file ', path);
+    try {
+        let s = fs.createReadStream(path)
+            .pipe(es.split())
+            .pipe(es.mapSync((line) => {
+            s.pause();
+            /* If first line */
+            if (index === 0) {
+                newstring += createSimpleLine(line, options.delimiter);
+                header = getHeader(line, options.delimiter);
+                constants = createConstants(line, options);
+            }
+            else {
+                /*  Create new lines */
+                newstring += createNewLine(line, options, constants);
+            }
+            index++;
+            s.resume();
+        }))
+            .on('error', (err) => {
+            reject({
+                ok: false,
+                message: "Something went wrong",
+                err: err
+            });
+        })
+            .on('end', () => {
+            writeFile(newstring, options.newfilename, options.path)
+                .then((success) => resolve(success))
+                .catch((err) => reject(err));
+        });
+    }
+    catch (err) {
         reject({
             ok: false,
-            message: "Something went wrong",
+            message: "something went wrong",
             err: err
         });
-    })
-        .on('end', () => {
-        writeFile(newstring, options.newfilename, options.path)
-            .then((success) => resolve(success))
-            .catch((err) => reject(err));
-    });
+    }
 });
 /* Down here is all the types */
 /**

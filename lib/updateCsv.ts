@@ -93,7 +93,10 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
     let newstring = ''
     let header = []
     let constants = {}
-    let s = fs.createReadStream(options.filename)
+    let path = `${options.path}/${options.filename}`
+    console.log('Finding file ', path)
+    try {
+    let s = fs.createReadStream(path)
         .pipe(es.split())
         .pipe(es.mapSync((line: string) => {
             s.pause()
@@ -123,6 +126,13 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
                 .then((success: result) => resolve(success))
                 .catch((err: result) => reject(err))
         })
+    } catch(err) {
+        reject({
+            ok: false,
+            message: "something went wrong",
+            err: err
+        })
+    }
 })
 
 /* Down here is all the types */
