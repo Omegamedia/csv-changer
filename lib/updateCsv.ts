@@ -3,8 +3,7 @@ import { result, updateOptions, optionsConstants } from './types'
 import * as fs from 'fs'
 const es = require('event-stream')
 import * as util from 'util'
-const writeFile = require('./file')
-
+const writeFile = require('./file').writeFile
 
 /**
  * Create array of header values

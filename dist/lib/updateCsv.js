@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const es = require('event-stream');
-const writeFile = require('./file');
+const writeFile = require('./file').writeFile;
 /**
  * Create array of header values
  * @param str First line of csv
