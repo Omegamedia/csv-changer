@@ -62,7 +62,7 @@ const createConstants = (str, options) => {
     let delimiter = options.delimiter || ',';
     let array = str.split(delimiter);
     let constants = {};
-    if (options.type === "move_inside") {
+    if (options.type === "move_inside" && checkOptions("move_inside", options)) {
         // Type move_inside = move variable from inside kolumn to new kolumn
         /* TODO: only yet supported type */
         constants = {
@@ -133,4 +133,20 @@ const move_inside = (arr, options, constants) => {
         arr[constants.indexB] = foundValue;
     }
     return arr.reduce(createLineFromArr, '');
+};
+/**
+ * Check if type has all the options required
+ */
+const checkOptions = (type, options) => {
+    let check = false;
+    if (type === "move_inside") {
+        check = options.options.findValue &&
+            (options.options.columnA || options.options.indexA) &&
+            (options.options.columnB || options.options.indexB) ?
+            true : false;
+    }
+    if (!check) {
+        console.log('Missing options | csv-changer');
+    }
+    return check;
 };

@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
-const mergeSubscribers = require('./lib/test');
+const mergeSubscribers = require('./lib/mergeSubscribers');
 const updateCsv = require('./lib/updateCsv');
 /*
 class CsvChanger {
