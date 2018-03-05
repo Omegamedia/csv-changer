@@ -1,7 +1,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 const mergeSubscribers = require('./lib/mergeSubscribers');
-const updateCsv = require('./lib/updateCsv');
+const updatecsv = require('./lib/updatecsv');
 /*
 class CsvChanger {
     constructor(public config: config) {
@@ -12,5 +12,5 @@ class CsvChanger {
 
 module.exports = (config: config) => new CsvChanger(config)
 */
-exports.mergeSubscribers = (config) => mergeSubscribers(config);
-exports.updateCsv = (options) => updateCsv(options);
+// exports.mergeSubscribers = (config: mergeConfig ) => mergeSubscribers(config)
+exports.updatecsv = (options) => updatecsv.main(options);

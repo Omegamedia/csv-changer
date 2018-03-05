@@ -87,7 +87,7 @@ const createConstants = (str: string, options: updateOptions): optionsConstants 
  * Main func
  * Update csv file
  */
-export default (options: updateOptions): Promise<result> => new Promise((resolve, reject) => {
+const main = (options: updateOptions): Promise<result> => new Promise((resolve, reject) => {
     let newfilename = options.newfilename || `${options.filename}_new.csv`
     let index = 0
     let newstring = ''
@@ -166,3 +166,6 @@ const checkOptions = (type:string, options:updateOptions): boolean => {
     }
     return check
 }
+
+
+exports.main = main

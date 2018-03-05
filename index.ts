@@ -1,7 +1,7 @@
 'use strict'
 const mergeSubscribers = require('./lib/mergeSubscribers')
-const updateCsv = require('./lib/updateCsv')
-import { mergeConfig, updateOptions } from './lib/types'
+const updatecsv = require('./lib/updatecsv')
+import { mergeConfig, updateOptions, result } from './lib/types'
 
 /*
 class CsvChanger {
@@ -15,6 +15,6 @@ module.exports = (config: config) => new CsvChanger(config)
 */
 
 
-exports.mergeSubscribers = (config: mergeConfig ) => mergeSubscribers(config)
+// exports.mergeSubscribers = (config: mergeConfig ) => mergeSubscribers(config)
 
-exports.updateCsv = (options: updateOptions) => updateCsv(options)
+exports.updatecsv = (options: updateOptions): Promise<result> => updatecsv.main(options)
