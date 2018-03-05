@@ -61,7 +61,7 @@ const createConstants = (str, options) => {
     let delimiter = options.delimiter || ',';
     let array = str.split(delimiter);
     let constants = {};
-    if (options.type === "move_inside" && checkOptions("move_inside", options)) {
+    if (options.type === "move_inside" /*&& checkOptions("move_inside", options)*/) {
         // Type move_inside = move variable from inside kolumn to new kolumn
         /* TODO: only yet supported type */
         constants = {
@@ -137,6 +137,7 @@ const move_inside = (arr, options, constants) => {
     }
     // console.log('Function: ', func.toString())
     let foundValue = "";
+    console.log('constants: ', constants);
     if (constants.indexA) {
         console.log('Running func');
         foundValue = func(arr[constants.indexA]);
