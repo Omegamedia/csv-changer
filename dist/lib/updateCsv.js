@@ -132,9 +132,10 @@ const main = (options) => new Promise((resolve, reject) => {
 const move_inside = (arr, options, constants) => {
     /* Possible error, need fix */
     let func = (str) => str;
-    if (options.options.findValue) {
+    if (typeof options.options.findValue === 'function') {
         func = options.options.findValue;
     }
+    console.log('Function: ', func.toString());
     let foundValue = "";
     if (constants.indexA) {
         foundValue = func(arr[constants.indexA]) || "";
