@@ -1,0 +1,21 @@
+{
+  "name": "csv-changer",
+  "version": "1.0.0",
+  "description": "Simple/specific tooling for csv changes",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^9.4.6"
+  },
+  "dependencies": {
+    "@types/event-stream": "^3.3.33",
+    "encoding": "^0.1.12",
+    "event-stream": "^3.3.4"
+  }
+}
