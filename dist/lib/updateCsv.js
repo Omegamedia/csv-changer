@@ -82,7 +82,7 @@ const main = (options) => new Promise((resolve, reject) => {
     let newstring = '';
     let header = [];
     let constants = {};
-    let path = `${options.path}/${options.filename}`;
+    let path = `${options.path}${options.filename}`;
     console.log('Finding file ', path);
     try {
         let s = fs.createReadStream(path)
