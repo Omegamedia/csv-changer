@@ -148,11 +148,12 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
         func = options.options.findValue
     }
 
-    console.log('Function: ', func.toString())
+    // console.log('Function: ', func.toString())
 
     let foundValue = ""
     if(constants.indexA) {
-        foundValue = func(arr[constants.indexA]) || ""
+        console.log('Running func')
+        foundValue = func(arr[constants.indexA])
     }
     if(constants.indexB) {
         arr[constants.indexB] = foundValue

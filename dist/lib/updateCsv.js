@@ -135,10 +135,11 @@ const move_inside = (arr, options, constants) => {
     if (typeof options.options.findValue === 'function') {
         func = options.options.findValue;
     }
-    console.log('Function: ', func.toString());
+    // console.log('Function: ', func.toString())
     let foundValue = "";
     if (constants.indexA) {
-        foundValue = func(arr[constants.indexA]) || "";
+        console.log('Running func');
+        foundValue = func(arr[constants.indexA]);
     }
     if (constants.indexB) {
         arr[constants.indexB] = foundValue;
