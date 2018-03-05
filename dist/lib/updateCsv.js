@@ -9,7 +9,7 @@ const writeFile = require('./file').writeFile;
  * @param delimiter csv delimiter
  */
 const getHeader = (str, delimiter = ',') => str.split(delimiter);
-const matchNameGetIndex = (value) => (index, name, i) => name.indexOf(value) > -1 ? i : index;
+const matchNameGetIndex = (value) => (index, name, i) => value == name.replace(/"/g, "").replace(/'/g, "") ? i : index;
 /**
  * Create line without modifications
  * In use for consistency

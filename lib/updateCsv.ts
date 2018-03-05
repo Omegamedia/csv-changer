@@ -14,7 +14,7 @@ const getHeader = (str: string, delimiter = ','): string[] => str.split(delimite
 
 const matchNameGetIndex = (value: string) => 
                             (index: number, name: string, i: number): number =>
-                                name.indexOf(value) > -1 ? i : index
+                                value == name.replace(/"/g, "").replace(/'/g, "") ? i : index
 /**
  * Create line without modifications
  * In use for consistency
