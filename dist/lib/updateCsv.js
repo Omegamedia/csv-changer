@@ -30,10 +30,10 @@ const createSimpleLine = (str, delimiter = ',') => {
  */
 const createLineFromArr = (string, value, i, original) => {
     if (i === original.length - 1) {
-        string += `${value}\n`;
+        string += `"=""${value.replace(/"/g, "")}"""\n`;
     }
     else {
-        string += `${value};`;
+        string += `"=""${value.replace(/"/g, "")}""";`;
     }
     return string;
 };
