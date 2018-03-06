@@ -21,6 +21,7 @@ export interface updateOptions {
     type: string;
     options: options;
     path: string;
+    excel?: boolean;
 }
 
 export interface options {

@@ -21,24 +21,27 @@ const matchNameGetIndex = (value: string) =>
  * @param str First line of csv
  * @param delimiter csv delimiter
  */
-const createSimpleLine = (str: string, delimiter = ',') => {
+const createSimpleLine = (str: string, delimiter = ',', excel = false) => {
     let array = str.split(delimiter)
-    let newstring = array.reduce(createLineFromArr, '')
+    let newstring = array.reduce(createLineFromArr(delimiter, excel), '')
     return newstring
 }
 
 /**
  * 
+ * @param excel bool to use format for excel or regular
+ * @param delimiter delimiter
  * @param string line
  * @param value current value in array
  * @param i index
  * @param original original array
  */
-const createLineFromArr = (string: string, value: string, i: number, original: string[]) => {
+const createLineFromArr = (delimiter = ',', excel = false) => (string: string, value: string, i: number, original: string[]) => {
+    const wrap = (str: string) => excel ? `"=""${str.replace(/"/g, "")}"""` : `"${value.replace(/"/g, "")}"`
     if(i === original.length - 1) {
-        string += `"=""${value.replace(/"/g, "")}"""\n`
+        string += `${wrap(value)}\n`
     } else {
-        string += `"=""${value.replace(/"/g, "")}""";`
+        string += `${wrap(value)};`
     }
     return string
 }
@@ -102,7 +105,7 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
             
             /* If first line */
             if(index === 0) {
-                newstring += createSimpleLine(line, options.delimiter)
+                newstring += createSimpleLine(line, options.delimiter, options.excel)
                 header = getHeader(line, options.delimiter)
                 constants = createConstants(line, options)
             } else {
@@ -164,7 +167,7 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
             arr[constants.indexB] = foundValue
         }
     }
-    return arr.reduce(createLineFromArr, '')
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel), '')
 }
 
 /**

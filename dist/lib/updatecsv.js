@@ -16,24 +16,27 @@ const matchNameGetIndex = (value) => (index, name, i) => value == name.replace(/
  * @param str First line of csv
  * @param delimiter csv delimiter
  */
-const createSimpleLine = (str, delimiter = ',') => {
+const createSimpleLine = (str, delimiter = ',', excel = false) => {
     let array = str.split(delimiter);
-    let newstring = array.reduce(createLineFromArr, '');
+    let newstring = array.reduce(createLineFromArr(delimiter, excel), '');
     return newstring;
 };
 /**
  *
+ * @param excel bool to use format for excel or regular
+ * @param delimiter delimiter
  * @param string line
  * @param value current value in array
  * @param i index
  * @param original original array
  */
-const createLineFromArr = (string, value, i, original) => {
+const createLineFromArr = (delimiter = ',', excel = false) => (string, value, i, original) => {
+    const wrap = (str) => excel ? `"=""${str.replace(/"/g, "")}"""` : `"${value.replace(/"/g, "")}"`;
     if (i === original.length - 1) {
-        string += `"=""${value.replace(/"/g, "")}"""\n`;
+        string += `${wrap(value)}\n`;
     }
     else {
-        string += `"=""${value.replace(/"/g, "")}""";`;
+        string += `${wrap(value)};`;
     }
     return string;
 };
@@ -91,7 +94,7 @@ const main = (options) => new Promise((resolve, reject) => {
             s.pause();
             /* If first line */
             if (index === 0) {
-                newstring += createSimpleLine(line, options.delimiter);
+                newstring += createSimpleLine(line, options.delimiter, options.excel);
                 header = getHeader(line, options.delimiter);
                 constants = createConstants(line, options);
             }
@@ -150,7 +153,7 @@ const move_inside = (arr, options, constants) => {
             arr[constants.indexB] = foundValue;
         }
     }
-    return arr.reduce(createLineFromArr, '');
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel), '');
 };
 /**
  * Check if type has all the options required
