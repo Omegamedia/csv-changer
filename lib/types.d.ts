@@ -18,6 +18,7 @@ export interface updateOptions {
     filename: string;
     newfilename?: string;
     delimiter?: string;
+    quotes?: boolean;
     type: string;
     options: options;
     path: string;

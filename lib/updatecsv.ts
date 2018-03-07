@@ -21,9 +21,9 @@ const matchNameGetIndex = (value: string) =>
  * @param str First line of csv
  * @param delimiter csv delimiter
  */
-const createSimpleLine = (str: string, delimiter = ',', excel = false) => {
+const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = true) => {
     let array = str.split(delimiter)
-    let newstring = array.reduce(createLineFromArr(delimiter, excel), '')
+    let newstring = array.reduce(createLineFromArr(delimiter, excel, quotes), '')
     return newstring
 }
 
@@ -36,8 +36,16 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false) => {
  * @param i index
  * @param original original array
  */
-const createLineFromArr = (delimiter = ',', excel = false) => (string: string, value: string, i: number, original: string[]) => {
-    const wrap = (str: string) => excel ? `"=""${str.replace(/"/g, "")}"""` : `"${value.replace(/"/g, "")}"`
+const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string: string, value: string, i: number, original: string[]) => {
+
+    const wrap = (str: string) => {
+        if(excel) {
+            return `"=""${str.replace(/"/g, "")}"""`
+        } else {
+            return quotes ? `"${str.replace(/"/g, "")}"` : `${str.replace(/"/g, "")}`
+        }
+    }
+
     if(i === original.length - 1) {
         string += `${wrap(value)}\n`
     } else {
@@ -105,7 +113,7 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
             
             /* If first line */
             if(index === 0) {
-                newstring += createSimpleLine(line, options.delimiter, options.excel)
+                newstring += createSimpleLine(line, options.delimiter, options.excel, options.quotes)
                 header = getHeader(line, options.delimiter)
                 constants = createConstants(line, options)
             } else {
@@ -167,7 +175,7 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
             arr[constants.indexB] = foundValue
         }
     }
-    return arr.reduce(createLineFromArr(options.delimiter, options.excel), '')
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes), '')
 }
 
 /**

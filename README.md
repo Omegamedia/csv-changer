@@ -25,6 +25,7 @@ let status = await csvChanger.updateCsv({
     delimiter: ';', // will be used for reading and writing csv
     type: 'move_inside',
     excel: true, // Format csv to prevent old bug in excel for numbers and date
+    quotes: false, // When writing to file, Default = true  
     options: {
         columnA: "order",// column to find value in
         columnB: "product",// column to insert value
