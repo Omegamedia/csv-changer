@@ -37,9 +37,6 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
  * @param original original array
  */
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string: string, value: string, i: number, original: string[]) => {
-    console.log('create line')
-    console.log('quotes:', quotes)
-
     const wrap = (str: string) => {
         if(excel) {
             return `"=""${str.replace(/"/g, "")}"""`
@@ -106,7 +103,6 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
     let header = []
     let constants = {}
     let path = `${options.path}${options.filename}`
-    console.log('Finding file ', path)
     try {
     let s = fs.createReadStream(path)
         .pipe(es.split())
@@ -165,10 +161,8 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
     // console.log('Function: ', func.toString())
 
     let foundValue = ""
-    console.log('constants: ', constants)
     if(constants.indexA) {
         if(arr[constants.indexA]) {
-            console.log('Running func')
             foundValue = func(arr[constants.indexA])
         }
     }
