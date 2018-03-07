@@ -16,9 +16,9 @@ const matchNameGetIndex = (value) => (index, name, i) => value == name.replace(/
  * @param str First line of csv
  * @param delimiter csv delimiter
  */
-const createSimpleLine = (str, delimiter = ',', excel = false) => {
+const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) => {
     let array = str.split(delimiter);
-    let newstring = array.reduce(createLineFromArr(delimiter, excel), '');
+    let newstring = array.reduce(createLineFromArr(delimiter, excel, quotes), '');
     return newstring;
 };
 /**
@@ -30,8 +30,17 @@ const createSimpleLine = (str, delimiter = ',', excel = false) => {
  * @param i index
  * @param original original array
  */
-const createLineFromArr = (delimiter = ',', excel = false) => (string, value, i, original) => {
-    const wrap = (str) => excel ? `"=""${str.replace(/"/g, "")}"""` : `"${value.replace(/"/g, "")}"`;
+const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string, value, i, original) => {
+    console.log('create line');
+    console.log('quotes:', quotes);
+    const wrap = (str) => {
+        if (excel) {
+            return `"=""${str.replace(/"/g, "")}"""`;
+        }
+        else {
+            return quotes ? `"${str.replace(/"/g, "")}"` : `${str.replace(/"/g, "")}`;
+        }
+    };
     if (i === original.length - 1) {
         string += `${wrap(value)}\n`;
     }
@@ -94,7 +103,7 @@ const main = (options) => new Promise((resolve, reject) => {
             s.pause();
             /* If first line */
             if (index === 0) {
-                newstring += createSimpleLine(line, options.delimiter, options.excel);
+                newstring += createSimpleLine(line, options.delimiter, options.excel, options.quotes);
                 header = getHeader(line, options.delimiter);
                 constants = createConstants(line, options);
             }
@@ -153,7 +162,7 @@ const move_inside = (arr, options, constants) => {
             arr[constants.indexB] = foundValue;
         }
     }
-    return arr.reduce(createLineFromArr(options.delimiter, options.excel), '');
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes), '');
 };
 /**
  * Check if type has all the options required

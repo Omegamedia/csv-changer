@@ -37,6 +37,8 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
  * @param original original array
  */
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string: string, value: string, i: number, original: string[]) => {
+    console.log('create line')
+    console.log('quotes:', quotes)
 
     const wrap = (str: string) => {
         if(excel) {
