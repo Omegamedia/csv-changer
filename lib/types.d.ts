@@ -27,6 +27,7 @@ export interface updateOptions {
 
 export interface options {
     columnA?: string;
+    columnsA?: string[];
     columnB?: string;
     columnC?: string;
     indexA?: number;
@@ -38,4 +39,5 @@ export interface optionsConstants {
     indexA?: number;
     indexB?: number;
     indexC?: number;
+    multipleIndexes?: number[];
 }

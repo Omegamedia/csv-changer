@@ -23,11 +23,12 @@ let status = await csvChanger.updateCsv({
     filename: 'currentfile.csv',
     newfilename: 'newfile.csv', // will be created within the same path as original file
     delimiter: ';', // will be used for reading and writing csv
-    type: 'move_inside',
+    type: 'move_inside', // alternatives: [ "move_inside" ]
     excel: true, // Format csv to prevent old bug in excel for numbers and date
     quotes: false, // When writing to file, Default = true  
     options: {
         columnA: "order",// column to find value in
+        columnsA: ["order, test_order"], // columns to find ONE value. If columnsA is populates, columnA will not be used.
         columnB: "product",// column to insert value
         findValue: column => return column // function to return variable from column
     },

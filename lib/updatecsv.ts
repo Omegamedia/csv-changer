@@ -12,6 +12,9 @@ const writeFile = require('./file').writeFile
  */
 const getHeader = (str: string, delimiter = ','): string[] => str.split(delimiter)
 
+const matchMultipleIndexes = (array: string[], indexes: string[]): number[] => 
+    indexes.map(index => array.reduce(matchNameGetIndex(index || ""), 0))
+
 const matchNameGetIndex = (value: string) => 
                             (index: number, name: string, i: number): number =>
                                 value == name.replace(/"/g, "").replace(/'/g, "") ? i : index
@@ -79,13 +82,13 @@ const createConstants = (str: string, options: updateOptions): optionsConstants 
     let delimiter = options.delimiter || ','
     let array =  str.split(delimiter)
     let constants = {}
-    console.log(options.options)
     if(options.type === "move_inside" /*&& checkOptions("move_inside", options)*/) {
         // Type move_inside = move variable from inside kolumn to new kolumn
        /* TODO: only yet supported type */ 
         constants = {
             indexA: array.reduce(matchNameGetIndex(options.options.columnA || ""), 0),
-            indexB: array.reduce(matchNameGetIndex(options.options.columnB || ""), 0)
+            indexB: array.reduce(matchNameGetIndex(options.options.columnB || ""), 0),
+            multipleIndexes: matchMultipleIndexes(array, options.options.columnsA || [])
         }
     }
     return constants
@@ -157,11 +160,15 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
     if(typeof options.options.findValue === 'function') {
         func = options.options.findValue
     }
-
-    // console.log('Function: ', func.toString())
-
     let foundValue = ""
-    if(constants.indexA) {
+    
+    // Check first for multiple indexes
+    if(constants.multipleIndexes) {
+        let value = constants.multipleIndexes.map(i => func(arr[i])).filter(index => index !== "")[0] || ""
+        if(value !== "") {
+            foundValue = value
+        }
+    } else if(constants.indexA) {
         if(arr[constants.indexA]) {
             foundValue = func(arr[constants.indexA])
         }
