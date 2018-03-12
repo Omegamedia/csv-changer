@@ -61,10 +61,16 @@ const createModify = (array, options, constants) => {
             console.log('3');
             let maxfor = options.modify.maxFor || [];
             console.log(maxfor);
-            indexesForMaxCharacter = array
-                .filter((x, i) => maxfor
-                .filter((max) => max === x).length > 0)
-                .map((x, i) => i);
+            indexesForMaxCharacter = array.reduce((indexes, name, index) => {
+                console.log(name);
+                let match = maxfor.filter(x => x === name).length > 0;
+                if (match) {
+                    return indexes.concat([index]);
+                }
+                else {
+                    return indexes;
+                }
+            }, indexesForMaxCharacter);
         }
     }
     console.log('indexes', indexesForMaxCharacter);
