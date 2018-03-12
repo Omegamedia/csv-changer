@@ -99,16 +99,22 @@ const createModify = (array: string[], options: updateOptions, constants: option
     console.log('options:', JSON.stringify(options, null, 2))
 
     if(typeof options.modify != "undefined") {
+        console.log('1')
         if(options.modify.maxForAll) {
+            console.log('2')
             indexesForMaxCharacter = array.map((x, i) => i)
         } else if(typeof options.modify.maxFor != 'undefined') {
+            console.log('3')
             let maxfor = options.modify.maxFor || []
+            console.log(maxfor)
             indexesForMaxCharacter = array
                 .filter((x, i) => maxfor
                     .filter((max) => max === x).length > 0)
                         .map((x, i) => i)            
         }
     }
+
+    console.log('indexes', indexesForMaxCharacter)
 
     if(indexesForMaxCharacter.length > 0) {
         return Object.assign({}, constants, {
