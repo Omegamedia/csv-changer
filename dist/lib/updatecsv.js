@@ -3,36 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const es = require('event-stream');
 const writeFile = require('./file').writeFile;
-/**
- * Create array of header values
- * @param str First line of csv
- * @param delimiter csv delimiter
- */
 const getHeader = (str, delimiter = ',') => str.split(delimiter);
 const matchMultipleIndexes = (array, indexes) => indexes.map(index => array.reduce(matchNameGetIndex(index || ""), 0));
 const matchNameGetIndex = (value) => (index, name, i) => value == name.replace(/"/g, "").replace(/'/g, "") ? i : index;
-/**
- * Create line without modifications
- * In use for consistency
- * @param str First line of csv
- * @param delimiter csv delimiter
- */
 const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) => {
     let array = str.split(delimiter);
     let newstring = array.reduce(createLineFromArr(delimiter, excel, quotes), '');
     return newstring;
 };
-/**
- *
- * @param excel bool to use format for excel or regular
- * @param delimiter delimiter
- * @param string line
- * @param value current value in array
- * @param i index
- * @param original original array
- */
-const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string, value, i, original) => {
+const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters) => (string, value, i, original) => {
+    const modifyString = (str) => {
+        if (maxCharacters) {
+            if (maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
+                return str.substring(0, maxCharacters.maxCharacters);
+            }
+        }
+        return str;
+    };
     const wrap = (str) => {
+        let string = str.replace(/"/g, "");
         if (excel) {
             return `"=""${str.replace(/"/g, "")}"""`;
         }
@@ -48,11 +37,6 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (st
     }
     return string;
 };
-/**
- * Modify line
- * @param str Line from original csv
- * @param options config options
- */
 const createNewLine = (str, options, constants) => {
     let delimiter = options.delimiter || ',';
     let type = options.type;
@@ -63,30 +47,43 @@ const createNewLine = (str, options, constants) => {
     }
     return newline;
 };
-/**
- * Get constant variables needed for file transformation
- * @param str First line
- * @param options config options
- */
+const createModify = (array, options, constants) => {
+    let indexesForMaxCharacter = [];
+    if (typeof options.modify != "undefined") {
+        if (options.modify.maxForAll) {
+            indexesForMaxCharacter = array.map((x, i) => i);
+        }
+        else if (typeof options.modify.maxFor != 'undefined') {
+            let maxfor = options.modify.maxFor || [];
+            indexesForMaxCharacter = array
+                .filter((x, i) => maxfor
+                .filter((max) => max === x).length > 0)
+                .map((x, i) => i);
+        }
+    }
+    if (indexesForMaxCharacter.length > 0) {
+        return Object.assign({}, constants, {
+            indexesForMaxCharacter: indexesForMaxCharacter
+        });
+    }
+    else {
+        return constants;
+    }
+};
 const createConstants = (str, options) => {
     let delimiter = options.delimiter || ',';
     let array = str.split(delimiter);
     let constants = {};
-    if (options.type === "move_inside" /*&& checkOptions("move_inside", options)*/) {
-        // Type move_inside = move variable from inside kolumn to new kolumn
-        /* TODO: only yet supported type */
+    if (options.type === "move_inside") {
         constants = {
             indexA: array.reduce(matchNameGetIndex(options.options.columnA || ""), 0),
             indexB: array.reduce(matchNameGetIndex(options.options.columnB || ""), 0),
             multipleIndexes: matchMultipleIndexes(array, options.options.columnsA || [])
         };
     }
-    return constants;
+    let contstantsWithModify = createModify(array, options, constants);
+    return contstantsWithModify;
 };
-/**
- * Main func
- * Update csv file
- */
 const main = (options) => new Promise((resolve, reject) => {
     let newfilename = options.newfilename || `${options.filename}_new.csv`;
     let index = 0;
@@ -99,14 +96,12 @@ const main = (options) => new Promise((resolve, reject) => {
             .pipe(es.split())
             .pipe(es.mapSync((line) => {
             s.pause();
-            /* If first line */
             if (index === 0) {
                 newstring += createSimpleLine(line, options.delimiter, options.excel, options.quotes);
                 header = getHeader(line, options.delimiter);
                 constants = createConstants(line, options);
             }
             else {
-                /*  Create new lines */
                 newstring += createNewLine(line, options, constants);
             }
             index++;
@@ -133,21 +128,12 @@ const main = (options) => new Promise((resolve, reject) => {
         });
     }
 });
-/* Down here is all the types */
-/**
- * Used when you want to move a value from inside a column to another column
- * @param arr from line
- * @param options user options
- * @param constants constants created from first line
- */
 const move_inside = (arr, options, constants) => {
-    /* Possible error, need fix */
     let func = (str) => str;
     if (typeof options.options.findValue === 'function') {
         func = options.options.findValue;
     }
     let foundValue = "";
-    // Check first for multiple indexes
     if (constants.multipleIndexes) {
         let value = constants.multipleIndexes.map(i => func(arr[i])).filter(index => index !== "")[0] || "";
         if (value !== "") {
@@ -164,11 +150,8 @@ const move_inside = (arr, options, constants) => {
             arr[constants.indexB] = foundValue;
         }
     }
-    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes), '');
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes, constants.maxCharacters), '');
 };
-/**
- * Check if type has all the options required
- */
 const checkOptions = (type, options) => {
     let check = false;
     if (type === "move_inside") {

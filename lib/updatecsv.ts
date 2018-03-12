@@ -1,5 +1,5 @@
 'use strict'
-import { result, updateOptions, optionsConstants } from './types'
+import { result, updateOptions, optionsConstants, modify, optionsMaxCharacters } from './types'
 import * as fs from 'fs'
 const es = require('event-stream')
 import * as util from 'util'
@@ -31,7 +31,9 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
 }
 
 /**
- * 
+ * This is used to create every string in the new csv!
+ * @param modify obj - if user wants character limit on any if the columns
+ * @param quotes bool should values be displayed with  """ or none
  * @param excel bool to use format for excel or regular
  * @param delimiter delimiter
  * @param string line
@@ -39,8 +41,19 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
  * @param i index
  * @param original original array
  */
-const createLineFromArr = (delimiter = ',', excel = false, quotes = true) => (string: string, value: string, i: number, original: string[]) => {
+const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters?: optionsMaxCharacters) => (string: string, value: string, i: number, original: string[]) => {
+
+    const modifyString = (str: string) => {
+        if(maxCharacters) {
+            if(maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
+                return str.substring(0, maxCharacters.maxCharacters)
+            }
+        }
+        return str
+    }
+
     const wrap = (str: string) => {
+        let string = str.replace(/"/g, "")
         if(excel) {
             return `"=""${str.replace(/"/g, "")}"""`
         } else {
@@ -74,6 +87,33 @@ const createNewLine = (str: string, options: updateOptions, constants: optionsCo
 }
 
 /**
+ * Create modify object for constants
+ * @param str First line
+ * @param options config options
+ * @param constants existing constants
+ */
+const createModify = (array: string[], options: updateOptions, constants: optionsConstants): optionsConstants => {
+    let indexesForMaxCharacter: number[] = []
+    if(typeof options.modify != "undefined") {
+        if(options.modify.maxForAll) {
+            indexesForMaxCharacter = array.map((x, i) => i)
+        } else if(typeof options.modify.maxFor != 'undefined') {
+            let maxfor = options.modify.maxFor || []
+            indexesForMaxCharacter = array
+                .filter((x, i) => maxfor
+                    .filter((max) => max === x).length > 0)
+                        .map((x, i) => i)            
+        }
+    }
+
+    if(indexesForMaxCharacter.length > 0) {
+        return Object.assign({}, constants, {
+                indexesForMaxCharacter: indexesForMaxCharacter
+        })
+    } else { return constants }
+}
+
+/**
  * Get constant variables needed for file transformation
  * @param str First line
  * @param options config options
@@ -91,7 +131,10 @@ const createConstants = (str: string, options: updateOptions): optionsConstants 
             multipleIndexes: matchMultipleIndexes(array, options.options.columnsA || [])
         }
     }
-    return constants
+
+    let contstantsWithModify = createModify(array, options, constants)
+
+    return contstantsWithModify
 }
 
 
@@ -146,7 +189,6 @@ const main = (options: updateOptions): Promise<result> => new Promise((resolve, 
     }
 })
 
-/* Down here is all the types */
 
 /**
  * Used when you want to move a value from inside a column to another column
@@ -178,7 +220,7 @@ const move_inside = (arr: string[], options: updateOptions, constants: optionsCo
             arr[constants.indexB] = foundValue
         }
     }
-    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes), '')
+    return arr.reduce(createLineFromArr(options.delimiter, options.excel, options.quotes, constants.maxCharacters), '')
 }
 
 /**

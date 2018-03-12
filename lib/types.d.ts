@@ -23,6 +23,13 @@ export interface updateOptions {
     options: options;
     path: string;
     excel?: boolean;
+    modify?: modify;
+}
+
+export interface modify {
+    maxCharacters: number;
+    maxForAll: boolean;
+    maxFor?: string[];
 }
 
 export interface options {
@@ -40,4 +47,10 @@ export interface optionsConstants {
     indexB?: number;
     indexC?: number;
     multipleIndexes?: number[];
+    maxCharacters?: optionsMaxCharacters;
+}
+
+export interface optionsMaxCharacters {
+    indexesForMaxCharacters: number[]
+    maxCharacters: number;
 }

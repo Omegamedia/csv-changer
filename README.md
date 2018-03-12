@@ -32,6 +32,12 @@ let status = await csvChanger.updateCsv({
         columnB: "product",// column to insert value
         findValue: column => return column // function to return variable from column
     },
+    modify: {
+        // Options to modify input in columns
+        maxCharacters: 10,
+        maxForAll: false,
+        maxFor: ["produkt"] // columns produkt will only contain 10 characters (first)
+    }
     path: "absoulute path to file folder",
 })
 // => result
