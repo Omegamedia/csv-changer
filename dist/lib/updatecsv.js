@@ -79,7 +79,7 @@ const createModify = (array, options, constants) => {
     if (indexesForMaxCharacter.length > 0) {
         return Object.assign({}, constants, {
             maxCharacters: {
-                indexesForMaxCharacter: indexesForMaxCharacter,
+                indexesForMaxCharacters: indexesForMaxCharacter,
                 maxCharacters: maxCharacters
             }
         });
