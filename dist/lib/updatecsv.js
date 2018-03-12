@@ -49,6 +49,8 @@ const createNewLine = (str, options, constants) => {
 };
 const createModify = (array, options, constants) => {
     let indexesForMaxCharacter = [];
+    console.log('createModify');
+    console.log('options:', JSON.stringify(options, null, 2));
     if (typeof options.modify != "undefined") {
         if (options.modify.maxForAll) {
             indexesForMaxCharacter = array.map((x, i) => i);

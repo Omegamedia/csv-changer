@@ -94,6 +94,10 @@ const createNewLine = (str: string, options: updateOptions, constants: optionsCo
  */
 const createModify = (array: string[], options: updateOptions, constants: optionsConstants): optionsConstants => {
     let indexesForMaxCharacter: number[] = []
+
+    console.log('createModify')
+    console.log('options:', JSON.stringify(options, null, 2))
+
     if(typeof options.modify != "undefined") {
         if(options.modify.maxForAll) {
             indexesForMaxCharacter = array.map((x, i) => i)
