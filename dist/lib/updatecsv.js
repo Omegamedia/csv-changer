@@ -15,12 +15,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
     console.log(`
     maxcharacters: ${maxCharacters ? maxCharacters.maxCharacters : 'Ingen maxcharacters'}`);
     const modifyString = (str) => {
-        let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter((x, y) => {
-            console.log('y', y);
-            console.log('i', i);
-            console.log('value', value);
-            return y === i;
-        }).length > 0 ? true : false : false;
+        let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter(x => x === i).length > 0 ? true : false : false;
         if (match && maxCharacters) {
             console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters);
             console.log('Index in reduce: ', i);
