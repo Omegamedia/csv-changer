@@ -15,14 +15,15 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
     console.log(`
     maxcharacters: ${maxCharacters ? maxCharacters.maxCharacters : 'Ingen maxcharacters'}`);
     const modifyString = (str) => {
-        if (maxCharacters) {
-            console.log('this should be running');
-            if (maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
-                console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters);
-                return str.substring(0, maxCharacters.maxCharacters);
-            }
+        let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0 : false;
+        if (match && maxCharacters) {
+            console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters);
+            console.log('returning ', str.substring(0, maxCharacters.maxCharacters));
+            return str.substring(0, maxCharacters.maxCharacters);
         }
-        return str;
+        else {
+            return str;
+        }
     };
     let modifiedString = modifyString(value);
     const wrap = (str) => {
