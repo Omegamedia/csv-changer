@@ -44,11 +44,13 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters?: optionsMaxCharacters) => (string: string, value: string, i: number, original: string[]) => {
 
     console.log(`
-    maxcharacters: ${maxCharacters}`)
+    maxcharacters: ${maxCharacters ? maxCharacters.maxCharacters : 'Ingen maxcharacters'}`)
 
     const modifyString = (str: string) => {
         if(maxCharacters) {
+            console.log('this should be running')
             if(maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
+                console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters)
                 return str.substring(0, maxCharacters.maxCharacters)
             }
         }

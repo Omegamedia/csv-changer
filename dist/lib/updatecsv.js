@@ -13,10 +13,12 @@ const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) =>
 };
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters) => (string, value, i, original) => {
     console.log(`
-    maxcharacters: ${maxCharacters}`);
+    maxcharacters: ${maxCharacters ? maxCharacters.maxCharacters : 'Ingen maxcharacters'}`);
     const modifyString = (str) => {
         if (maxCharacters) {
+            console.log('this should be running');
             if (maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
+                console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters);
                 return str.substring(0, maxCharacters.maxCharacters);
             }
         }
