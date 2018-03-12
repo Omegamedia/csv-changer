@@ -35,7 +35,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
     else {
         string += `${wrap(value)};`;
     }
-    return string;
+    return modifyString(string);
 };
 const createNewLine = (str, options, constants) => {
     let delimiter = options.delimiter || ',';
@@ -82,6 +82,7 @@ const createConstants = (str, options) => {
         };
     }
     let contstantsWithModify = createModify(array, options, constants);
+    console.log('Csv-Changer options => ', contstantsWithModify);
     return contstantsWithModify;
 };
 const main = (options) => new Promise((resolve, reject) => {
