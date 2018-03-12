@@ -43,15 +43,9 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
  */
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters?: optionsMaxCharacters) => (string: string, value: string, i: number, original: string[]) => {
 
-    console.log(`
-    maxcharacters: ${maxCharacters ? maxCharacters.maxCharacters : 'Ingen maxcharacters'}`)
-
     const modifyString = (str: string) => {
         let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter(x => x === i).length > 0 ? true : false : false
         if(match && maxCharacters) {
-            console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters)
-            console.log('Index in reduce: ', i)
-            console.log('returning ', str.substring(0, maxCharacters.maxCharacters))
             return str.substring(0, maxCharacters.maxCharacters)
         } else { return str }
     }
@@ -102,23 +96,15 @@ const createModify = (array: string[], options: updateOptions, constants: option
     let indexesForMaxCharacter: number[] = []
     let maxCharacters = 100
 
-    console.log('createModify')
-    console.log('options:', JSON.stringify(options, null, 2))
-
     if(typeof options.modify != "undefined") {
-        console.log('1')
         maxCharacters = options.modify.maxCharacters
 
         if(options.modify.maxForAll) {
-            console.log('2')
             indexesForMaxCharacter = array.map((x, i) => i)
 
         } else if(typeof options.modify.maxFor != 'undefined') {
-            console.log('3')
             let maxfor = options.modify.maxFor || []
-            console.log(maxfor)
             indexesForMaxCharacter = array.reduce((indexes, name, index) => {
-                console.log(name)
                 let match = maxfor.filter(x => x === name.replace(/"/g, "")).length > 0
                 if(match) {
                     return indexes.concat([index])
@@ -128,8 +114,6 @@ const createModify = (array: string[], options: updateOptions, constants: option
             }, indexesForMaxCharacter)
         }
     }
-
-    console.log('indexes', indexesForMaxCharacter)
 
     if(indexesForMaxCharacter.length > 0) {
         return Object.assign({}, constants, {
@@ -162,7 +146,7 @@ const createConstants = (str: string, options: updateOptions): optionsConstants 
 
     let contstantsWithModify = createModify(array, options, constants)
 
-    console.log('Csv-Changer options => ', contstantsWithModify)
+    console.log('Csv-Changer options => ', JSON.stringify(contstantsWithModify, null, 2))
 
     return contstantsWithModify
 }
