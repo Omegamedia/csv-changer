@@ -12,6 +12,8 @@ const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) =>
     return newstring;
 };
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters) => (string, value, i, original) => {
+    console.log(`
+    maxcharacters: ${maxCharacters}`);
     const modifyString = (str) => {
         if (maxCharacters) {
             if (maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0) {
@@ -20,6 +22,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
         }
         return str;
     };
+    let modifiedString = modifyString(value);
     const wrap = (str) => {
         let string = str.replace(/"/g, "");
         if (excel) {
@@ -30,12 +33,12 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
         }
     };
     if (i === original.length - 1) {
-        string += `${wrap(value)}\n`;
+        string += `${wrap(modifiedString)}\n`;
     }
     else {
-        string += `${wrap(value)};`;
+        string += `${wrap(modifiedString)};`;
     }
-    return modifyString(string);
+    return string;
 };
 const createNewLine = (str, options, constants) => {
     let delimiter = options.delimiter || ',';
