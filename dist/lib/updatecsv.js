@@ -18,6 +18,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
         let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter((x, y) => y === i).length > 0 : false;
         if (match && maxCharacters) {
             console.log('found index', maxCharacters.indexesForMaxCharacters, maxCharacters.maxCharacters);
+            console.log('Index in reduce: ', i);
             console.log('returning ', str.substring(0, maxCharacters.maxCharacters));
             return str.substring(0, maxCharacters.maxCharacters);
         }
