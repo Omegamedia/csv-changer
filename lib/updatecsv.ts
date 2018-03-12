@@ -111,7 +111,7 @@ const createModify = (array: string[], options: updateOptions, constants: option
             console.log(maxfor)
             indexesForMaxCharacter = array.reduce((indexes, name, index) => {
                 console.log(name)
-                let match = maxfor.filter(x => x === name).length > 0
+                let match = maxfor.filter(x => x === name.replace(/"/g, "")).length > 0
                 if(match) {
                     return indexes.concat([index])
                 } else {
