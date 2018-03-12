@@ -94,12 +94,14 @@ const createNewLine = (str: string, options: updateOptions, constants: optionsCo
  */
 const createModify = (array: string[], options: updateOptions, constants: optionsConstants): optionsConstants => {
     let indexesForMaxCharacter: number[] = []
+    let maxCharacters = 100
 
     console.log('createModify')
     console.log('options:', JSON.stringify(options, null, 2))
 
     if(typeof options.modify != "undefined") {
         console.log('1')
+        maxCharacters = options.modify.maxCharacters
 
         if(options.modify.maxForAll) {
             console.log('2')
@@ -125,7 +127,10 @@ const createModify = (array: string[], options: updateOptions, constants: option
 
     if(indexesForMaxCharacter.length > 0) {
         return Object.assign({}, constants, {
-                indexesForMaxCharacter: indexesForMaxCharacter
+                maxCharacters: {
+                    indexesForMaxCharacter: indexesForMaxCharacter,
+                    maxCharacters: maxCharacters
+                }
         })
     } else { return constants }
 }
