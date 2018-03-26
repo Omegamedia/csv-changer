@@ -13,9 +13,10 @@ const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) =>
 };
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters) => (string, value, i, original) => {
     const modifyString = (str) => {
-        let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter(x => x === i).length > 0 ? true : false : false;
-        if (match && maxCharacters) {
-            return str.substring(0, maxCharacters.maxCharacters);
+        let matchedMaxFor = maxCharacters ? maxCharacters.maxFor.filter(x => x.index === i) : [];
+        let match = matchedMaxFor.length > 0;
+        if (match) {
+            return str.substring(0, matchedMaxFor[0].max);
         }
         else {
             return str;
@@ -50,30 +51,41 @@ const createNewLine = (str, options, constants) => {
     return newline;
 };
 const createModify = (array, options, constants) => {
-    let indexesForMaxCharacter = [];
+    let maxFor = [];
     let maxCharacters = 100;
     if (typeof options.modify != "undefined") {
         maxCharacters = options.modify.maxCharacters;
         if (options.modify.maxForAll) {
-            indexesForMaxCharacter = array.map((x, i) => i);
+            maxFor = array.map((x, i) => {
+                return {
+                    name: x,
+                    max: 30,
+                    index: i
+                };
+            });
         }
         else if (typeof options.modify.maxFor != 'undefined') {
-            let maxfor = options.modify.maxFor || [];
-            indexesForMaxCharacter = array.reduce((indexes, name, index) => {
-                let match = maxfor.filter(x => x === name.replace(/"/g, "")).length > 0;
+            let oldMaxFor = options.modify.maxFor || [];
+            maxFor = array.reduce((indexes, name, index) => {
+                let matchedMaxFor = oldMaxFor.filter(x => x.name === name.replace(/"/g, ""));
+                let match = matchedMaxFor.length > 0;
                 if (match) {
-                    return indexes.concat([index]);
+                    return indexes.concat([{
+                            name: matchedMaxFor[0].name,
+                            max: matchedMaxFor[0].max,
+                            index: matchedMaxFor[0].index
+                        }]);
                 }
                 else {
                     return indexes;
                 }
-            }, indexesForMaxCharacter);
+            }, maxFor);
         }
     }
-    if (indexesForMaxCharacter.length > 0) {
+    if (maxFor.length > 0) {
         return Object.assign({}, constants, {
             maxCharacters: {
-                indexesForMaxCharacters: indexesForMaxCharacter,
+                maxFor: maxFor,
                 maxCharacters: maxCharacters
             }
         });

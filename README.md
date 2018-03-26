@@ -36,7 +36,10 @@ let status = await csvChanger.updateCsv({
         // Options to modify input in columns
         maxCharacters: 10,
         maxForAll: false,
-        maxFor: ["produkt"] // columns produkt will only contain 10 characters (first)
+        maxFor: [{
+            name: "Produkt",
+            max: 30
+        }] // columns produkt will only contain 10 characters (first)
     }
     path: "absoulute path to file folder",
 })

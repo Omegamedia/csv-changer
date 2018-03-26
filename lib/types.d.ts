@@ -29,7 +29,13 @@ export interface updateOptions {
 export interface modify {
     maxCharacters: number;
     maxForAll: boolean;
-    maxFor?: string[];
+    maxFor?: maxFor[];
+}
+
+export interface maxFor {
+    name: string;
+    max: number;
+    index?: number;
 }
 
 export interface options {
@@ -51,6 +57,6 @@ export interface optionsConstants {
 }
 
 export interface optionsMaxCharacters {
-    indexesForMaxCharacters: number[]
+    maxFor: maxFor[];
     maxCharacters: number;
 }

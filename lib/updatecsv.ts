@@ -1,5 +1,5 @@
 'use strict'
-import { result, updateOptions, optionsConstants, modify, optionsMaxCharacters } from './types'
+import { result, updateOptions, optionsConstants, modify, optionsMaxCharacters, maxFor } from './types'
 import * as fs from 'fs'
 const es = require('event-stream')
 import * as util from 'util'
@@ -43,10 +43,12 @@ const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = 
  */
 const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCharacters?: optionsMaxCharacters) => (string: string, value: string, i: number, original: string[]) => {
 
+    // TODO
     const modifyString = (str: string) => {
-        let match = maxCharacters ? maxCharacters.indexesForMaxCharacters.filter(x => x === i).length > 0 ? true : false : false
-        if(match && maxCharacters) {
-            return str.substring(0, maxCharacters.maxCharacters)
+        let matchedMaxFor = maxCharacters ? maxCharacters.maxFor.filter(x => x.index === i) : []
+        let match = matchedMaxFor.length > 0
+        if(match) {
+            return str.substring(0, matchedMaxFor[0].max)
         } else { return str }
     }
 
@@ -93,32 +95,43 @@ const createNewLine = (str: string, options: updateOptions, constants: optionsCo
  * @param constants existing constants
  */
 const createModify = (array: string[], options: updateOptions, constants: optionsConstants): optionsConstants => {
-    let indexesForMaxCharacter: number[] = []
-    let maxCharacters = 100
+    let maxFor: maxFor[] = []
+    let maxCharacters = 1000
 
     if(typeof options.modify != "undefined") {
         maxCharacters = options.modify.maxCharacters
 
         if(options.modify.maxForAll) {
-            indexesForMaxCharacter = array.map((x, i) => i)
+            maxFor = array.map((x, i) => {
+                return {
+                    name: x,
+                    max: maxCharacters,
+                    index: i
+                }
+            })
 
         } else if(typeof options.modify.maxFor != 'undefined') {
-            let maxfor = options.modify.maxFor || []
-            indexesForMaxCharacter = array.reduce((indexes, name, index) => {
-                let match = maxfor.filter(x => x === name.replace(/"/g, "")).length > 0
+            let oldMaxFor = options.modify.maxFor || []
+            maxFor = array.reduce((indexes, name, index) => {
+                let matchedMaxFor = oldMaxFor.filter(x => x.name === name.replace(/"/g, ""))
+                let match = matchedMaxFor.length > 0
                 if(match) {
-                    return indexes.concat([index])
+                    return indexes.concat([{
+                        name: matchedMaxFor[0].name,
+                        max: matchedMaxFor[0].max,
+                        index: matchedMaxFor[0].index
+                    }])
                 } else {
                     return indexes
                 }
-            }, indexesForMaxCharacter)
+            }, maxFor)
         }
     }
 
-    if(indexesForMaxCharacter.length > 0) {
+    if(maxFor.length > 0) {
         return Object.assign({}, constants, {
                 maxCharacters: {
-                    indexesForMaxCharacters: indexesForMaxCharacter,
+                    maxFor: maxFor,
                     maxCharacters: maxCharacters
                 }
         })
