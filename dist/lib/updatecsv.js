@@ -52,14 +52,14 @@ const createNewLine = (str, options, constants) => {
 };
 const createModify = (array, options, constants) => {
     let maxFor = [];
-    let maxCharacters = 100;
+    let maxCharacters = 1000;
     if (typeof options.modify != "undefined") {
         maxCharacters = options.modify.maxCharacters;
         if (options.modify.maxForAll) {
             maxFor = array.map((x, i) => {
                 return {
                     name: x,
-                    max: 30,
+                    max: maxCharacters,
                     index: i
                 };
             });
@@ -73,7 +73,7 @@ const createModify = (array, options, constants) => {
                     return indexes.concat([{
                             name: matchedMaxFor[0].name,
                             max: matchedMaxFor[0].max,
-                            index: matchedMaxFor[0].index
+                            index: index
                         }]);
                 }
                 else {

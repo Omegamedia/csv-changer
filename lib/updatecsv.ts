@@ -119,7 +119,7 @@ const createModify = (array: string[], options: updateOptions, constants: option
                     return indexes.concat([{
                         name: matchedMaxFor[0].name,
                         max: matchedMaxFor[0].max,
-                        index: matchedMaxFor[0].index
+                        index: index
                     }])
                 } else {
                     return indexes
