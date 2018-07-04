@@ -24,7 +24,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
     };
     let modifiedString = modifyString(value);
     const wrap = (str) => {
-        let string = str.replace(/"/g, "");
+        let string = str.replace(/"/g, "").replace(/&amp;/g, "&");
         if (excel) {
             return `"=""${str.replace(/"/g, "")}"""`;
         }
