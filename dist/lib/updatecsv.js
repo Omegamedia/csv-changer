@@ -7,7 +7,7 @@ const getHeader = (str, delimiter = ',') => str.split(delimiter);
 const matchMultipleIndexes = (array, indexes) => indexes.map(index => array.reduce(matchNameGetIndex(index || ""), 0));
 const matchNameGetIndex = (value) => (index, name, i) => value == name.replace(/"/g, "").replace(/'/g, "") ? i : index;
 const createSimpleLine = (str, delimiter = ',', excel = false, quotes = true) => {
-    let array = str.replace(/amp;/g, "").split(delimiter);
+    let array = str.split(delimiter);
     let newstring = array.reduce(createLineFromArr(delimiter, excel, quotes), '');
     return newstring;
 };
@@ -43,7 +43,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
 const createNewLine = (str, options, constants) => {
     let delimiter = options.delimiter || ',';
     let type = options.type;
-    let arr = str.split(delimiter);
+    let arr = str.replace(/amp;/g, "").split(delimiter);
     let newline = str;
     if (type === "move_inside") {
         newline = move_inside(arr, options, constants);

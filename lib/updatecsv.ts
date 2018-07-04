@@ -25,7 +25,7 @@ const matchNameGetIndex = (value: string) =>
  * @param delimiter csv delimiter
  */
 const createSimpleLine = (str: string, delimiter = ',', excel = false, quotes = true) => {
-    let array = str.replace(/amp;/g, "").split(delimiter)
+    let array = str.split(delimiter)
     let newstring = array.reduce(createLineFromArr(delimiter, excel, quotes), '')
     return newstring
 }
@@ -80,7 +80,7 @@ const createLineFromArr = (delimiter = ',', excel = false, quotes = true, maxCha
 const createNewLine = (str: string, options: updateOptions, constants: optionsConstants): string => {
     let delimiter = options.delimiter || ','
     let type = options.type
-    let arr = str.split(delimiter)
+    let arr = str.replace(/amp;/g, "").split(delimiter)
     let newline = str
     if(type === "move_inside") {
         newline = move_inside(arr, options, constants)
